@@ -5,7 +5,7 @@ mit license and all that
 """
 import random
 import termcolor
-
+import argparse
 
 def get_word_list(pth, len_word):
 	words = []
@@ -63,11 +63,8 @@ def print_letters(lttrs, len_word):
 	print(f"{spacer} {rem_letters}")
 	
 		
-def game_loop():
+def game_loop(len_word = 5, n_guesses = 6, word_list_path = 'word_list.txt'):
 
-	game_over = False
-	n_guesses = 6
-	len_word = 5
 
 	empty_word = ''.join(['_']*len_word)
 	guess_words = [empty_word]*n_guesses
@@ -77,7 +74,7 @@ def game_loop():
 
 	letters = set('abcdefghijklmnopqrstuvwxyz')
 
-	word_list = get_word_list(pth = 'word_list.txt', len_word = len_word)
+	word_list = get_word_list(pth = word_list_path, len_word = len_word)
 	target = pick_word(word_list)
 
 	termcolor.cprint(f'Welcome to Wurdle', 'blue', attrs=['bold'])
@@ -119,7 +116,25 @@ def game_loop():
 	return
 
 if __name__ == '__main__':
-	game_loop()
+	parser = argparse.ArgumentParser()
+	parser.add_argument(
+		"-ng",
+		"--number_of_guesses",
+		type=int,
+		default= 6,
+		help="Number of guesses",
+		)
+	parser.add_argument(
+		"-lw",
+		"--word_length",
+		type=int,
+		default= 5,
+		help="Length of Words",
+		)
+	args = parser.parse_args()
+
+	game_loop(len_word = args.word_length, 
+				n_guesses = args.number_of_guesses)
 
 
 
