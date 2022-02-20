@@ -21,7 +21,6 @@ def pick_word(words):
 	return random.choice(words)
 
 def check_answer(ans, word, words):
-
 	assert ans in words
 	output =[0]*len(word)
 
@@ -31,14 +30,10 @@ def check_answer(ans, word, words):
 
 			if ans[l_ind] == word[l_ind]:
 				output[l_ind] += 1
-
 	return output
 
 
-color_pallete = {0:'white',
-				1: 'yellow',
-				2: 'green'}
-
+color_pallete = {0:'white', 1: 'yellow', 2: 'green'}
 def print_word(word, output, pal = color_pallete):
 	char_list = []
 	for l_ind in range(len(word)):
@@ -51,7 +46,6 @@ def print_word(word, output, pal = color_pallete):
 	printline = sep.join(char_list)
 	print(printline)
 
-
 def print_board(guesses):
 	for guess, output in guesses:
 		print_word(guess, output)
@@ -61,10 +55,8 @@ def print_letters(lttrs, len_word):
 	spacer = "".join(spacer)
 	rem_letters = " ".join(sorted(list(lttrs)))
 	print(f"{spacer} {rem_letters}")
-	
-		
+			
 def game_loop(len_word = 5, n_guesses = 6, word_list_path = 'word_list.txt'):
-
 
 	empty_word = ''.join(['_']*len_word)
 	guess_words = [empty_word]*n_guesses
@@ -81,11 +73,8 @@ def game_loop(len_word = 5, n_guesses = 6, word_list_path = 'word_list.txt'):
 	print_board(guesses)
 
 	num = 0
-	while num < n_guesses:
-		
-
+	while num < n_guesses:	
 		termcolor.cprint(f'Please enter guess', 'blue', attrs=['bold'])
-
 		g = input().lower()
 
 		if g == '-q':
@@ -93,7 +82,7 @@ def game_loop(len_word = 5, n_guesses = 6, word_list_path = 'word_list.txt'):
 			return
 
 		if not g.isalpha() or  g not in word_list:
-			termcolor.cprint(f'Please enter a real word stupid', 'red', attrs=['bold'])
+			termcolor.cprint(f'Enter a real word stupid', 'red', attrs=['bold'])
 			continue
 
 		guesses[num][0] = g
@@ -132,7 +121,6 @@ if __name__ == '__main__':
 		help="Length of Words",
 		)
 	args = parser.parse_args()
-
 	game_loop(len_word = args.word_length, 
 				n_guesses = args.number_of_guesses)
 
