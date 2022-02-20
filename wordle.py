@@ -57,7 +57,10 @@ def print_board(guesses):
 		print_word(guess, output)
 
 def print_letters(lttrs, len_word):
-	print(f"{[' ']*len_word} {sorted(list(lttrs))}")
+	spacer = ['____']*len_word
+	spacer = "".join(spacer)
+	rem_letters = " ".join(sorted(list(lttrs)))
+	print(f"{spacer} {rem_letters}")
 	
 		
 def game_loop():
