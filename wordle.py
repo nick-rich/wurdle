@@ -7,6 +7,57 @@ import random
 import termcolor
 import argparse
 
+def print_welcome():
+
+	wurdle_pnt = r"""
+     __    __    ___  _         __   ___   ___ ___    ___      ______   ___      
+    |  T__T  T  /  _]| T       /  ] /   \ |   T   T  /  _]    |      T /   \     
+    |  |  |  | /  [_ | |      /  / Y     Y| _   _ | /  [_     |      |Y     Y    
+    |  |  |  |Y    _]| l___  /  /  |  O  ||  \_/  |Y    _]    l_j  l_j|  O  |    
+    l  `  '  !|   [_ |     T/   \_ |     ||   |   ||   [_       |  |  |     |    
+     \      / |     T|     |\     |l     !|   |   ||     T      |  |  l     !    
+      \_/\_/  l_____jl_____j \____j \___/ l___j___jl_____j      l__j   \___/     
+                 __    __  __ __  ____   ___    _        ___                     
+                |  T__T  T|  T  T|    \ |   \  | T      /  _]                    
+                |  |  |  ||  |  ||  D  )|    \ | |     /  [_                     
+                |  |  |  ||  |  ||    / |  D  Y| l___ Y    _]                    
+                l  `  '  !|  :  ||    \ |     ||     T|   [_                     
+                 \      / l     ||  .  Y|     ||     ||     T                    
+                  \_/\_/   \__,_jl__j\_jl_____jl_____jl_____j      
+	"""
+	colored_wurdle_pnt = termcolor.colored(wurdle_pnt, 'blue', attrs=['bold'])
+	print(colored_wurdle_pnt)
+
+def print_win():
+
+	wurdle_pnt = r"""
+	 __ __   ___   __ __      __    __  ____  ____  
+	|  T  T /   \ |  T  T    |  T__T  Tl    j|    \ 
+	|  |  |Y     Y|  |  |    |  |  |  | |  T |  _  Y
+	|  ~  ||  O  ||  |  |    |  |  |  | |  | |  |  |
+	l___, ||     ||  :  |    l  `  '  ! |  | |  |  |
+	|     !l     !l     |     \      /  j  l |  |  |
+	l____/  \___/  \__,_j      \_/\_/  |____jl__j__j
+                                                    
+	"""
+	colored_wurdle_pnt = termcolor.colored(wurdle_pnt, 'green', attrs=['bold'])
+	print(colored_wurdle_pnt)
+
+def print_lose():
+
+	wurdle_pnt = r"""
+	 __ __   ___   __ __      _       ___    _____   ___ 
+	|  T  T /   \ |  T  T    | T     /   \  / ___/  /  _]
+	|  |  |Y     Y|  |  |    | |    Y     Y(   \_  /  [_ 
+	|  ~  ||  O  ||  |  |    | l___ |  O  | \__  TY    _]
+	l___, ||     ||  :  |    |     T|     | /  \ ||   [_ 
+	|     !l     !l     |    |     |l     ! \    ||     T
+	l____/  \___/  \__,_j    l_____j \___/   \___jl_____j
+                                                                                                   
+	"""
+	colored_wurdle_pnt = termcolor.colored(wurdle_pnt, 'red', attrs=['bold'])
+	print(colored_wurdle_pnt)
+
 def get_word_list(pth, len_word):
 	words = []
 	with open(pth, 'r') as wl:
@@ -55,21 +106,40 @@ def print_letters(lttrs, len_word):
 	spacer = "".join(spacer)
 	rem_letters = " ".join(sorted(list(lttrs)))
 	print(f"{spacer} {rem_letters}")
-			
-def game_loop(len_word = 5, n_guesses = 6, word_list_path = 'word_list.txt'):
 
+def setup_guesses(n_guesses, len_word):
 	empty_word = ''.join(['_']*len_word)
 	guess_words = [empty_word]*n_guesses
 	guess_outputs = [[0]*len_word]*n_guesses
 	lzobj = list(zip(guess_words, guess_outputs))
 	guesses = [list(z) for z in lzobj]
+	return guesses
 
+
+
+
+def game_loop(len_word,
+			 n_guesses, 
+			 word_list_path = 'word_list.txt', 
+			 target = None):
+
+	
+
+	if target is not None:
+		len_word = len(target)
+		word_list = get_word_list(pth = word_list_path, len_word = len_word)
+		word_list.append(target)
+		
+
+	if target is None:
+		word_list = get_word_list(pth = word_list_path, len_word = len_word)
+		target = pick_word(word_list)
+
+	guesses = setup_guesses(n_guesses, len_word)
 	letters = set('abcdefghijklmnopqrstuvwxyz')
 
-	word_list = get_word_list(pth = word_list_path, len_word = len_word)
-	target = pick_word(word_list)
-
-	termcolor.cprint(f'Welcome to Wurdle', 'blue', attrs=['bold'])
+	
+	print_welcome()
 	print_board(guesses)
 
 	num = 0
@@ -81,7 +151,7 @@ def game_loop(len_word = 5, n_guesses = 6, word_list_path = 'word_list.txt'):
 			termcolor.cprint(f'Goodbye', 'red', attrs=['bold'])
 			return
 
-		if not g.isalpha() or  g not in word_list:
+		if not g.isalpha() or g not in word_list:
 			termcolor.cprint(f'Enter a real word stupid', 'red', attrs=['bold'])
 			continue
 
@@ -95,12 +165,14 @@ def game_loop(len_word = 5, n_guesses = 6, word_list_path = 'word_list.txt'):
 		print_letters(letters, len_word)
 
 		if g == target:
-			termcolor.cprint(f'You Win!', 'blue', attrs=['bold'])
+			print_win()
+			# termcolor.cprint(f'You Win!', 'blue', attrs=['bold'])
 			return
 
 		num += 1
 
-	termcolor.cprint(f'You Lose!', 'blue', attrs=['bold'])
+	# termcolor.cprint(f'You Lose!', 'blue', attrs=['bold'])
+	print_lose()
 	termcolor.cprint(f'Your word was {target}', 'blue', attrs=['bold'])
 	return
 
@@ -127,10 +199,17 @@ if __name__ == '__main__':
 		default= 'word_list.txt',
 		help="path to list of words",
 		)
+	parser.add_argument(
+		"--target",
+		type=str,
+		default= None,
+		help="target word (optional)",
+		)
 	args = parser.parse_args()
 	game_loop(len_word = args.word_length, 
 				n_guesses = args.number_of_guesses,
-				word_list_path = args.dictionary)
+				word_list_path = args.dictionary,
+				target = args.target)
 
 
 
