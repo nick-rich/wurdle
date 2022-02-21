@@ -114,15 +114,23 @@ if __name__ == '__main__':
 		help="Number of guesses",
 		)
 	parser.add_argument(
-		"-lw",
+		"-wl",
 		"--word_length",
 		type=int,
 		default= 5,
 		help="Length of Words",
 		)
+	parser.add_argument(
+		"-d",
+		"--dictionary",
+		type=str,
+		default= 'word_list.txt',
+		help="path to list of words",
+		)
 	args = parser.parse_args()
 	game_loop(len_word = args.word_length, 
-				n_guesses = args.number_of_guesses)
+				n_guesses = args.number_of_guesses,
+				word_list_path = args.dictionary)
 
 
 
